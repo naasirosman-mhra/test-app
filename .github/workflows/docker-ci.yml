@@ -16,6 +16,7 @@ jobs:
 
       - name: Build Docker image
         run: |
+          cd my-app
           docker build -t azure-test-image .
 
       - name: Log in to Docker Hub
