@@ -1,0 +1,35 @@
+name: Security Scan
+
+on:
+  workflow_call:
+    secrets: 
+      DOCKER_HUB_USERNAME: 
+          required: true
+    
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+
+      - name: Trivy Security Scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: '${{ secrets.DOCKER_HUB_USERNAME }}/azure:${{ github.sha }}'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+
+      - name: Grype Scan
+        uses: anchore/scan-action@v3
+        with:
+          image: '${{ secrets.DOCKER_HUB_USERNAME }}/azure:${{ github.sha }}'
+
+
+        
