@@ -27,7 +27,7 @@ jobs:
           severity: 'CRITICAL,HIGH'
 
       - name: Grype Scan
-        uses: anchore/scan-action@v3
+        uses: anchore/scan-action@v3 
         with:
           image: '${{ secrets.DOCKER_HUB_USERNAME }}/azure:${{ github.sha }}'
 
