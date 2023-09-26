@@ -15,16 +15,16 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t azure-test-image .
+          docker build -t test-image .
 
       - name: Log in to Docker Hub
         run: docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_PASSWORD }}
 
-      # - name: Tag Docker image as latest
-      #   run: docker tag azure-test-image "${{ secrets.DOCKER_HUB_USERNAME }}/azure:latest"
+      - name: Tag Docker image as latest
+        run: docker tag test-image "${{ secrets.DOCKER_HUB_USERNAME }}/azure:latest"
 
       - name: Tag Docker image with git commit sha
-        run: docker tag azure-test-image "${{ secrets.DOCKER_HUB_USERNAME }}/azure:${{ github.sha }}"
+        run: docker tag test-image "${{ secrets.DOCKER_HUB_USERNAME }}/azure:${{ github.sha }}"
 
 
       - name: Push Docker image
