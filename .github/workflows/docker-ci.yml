@@ -47,7 +47,12 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
 
-      - name: Grype Scan
-        uses: anchore/scan-action@v3 
+      - name: Run Security Scan
+        uses: aquasecurity/trivy-action@master
         with:
-          image: 'naasirosman/test-repo:${{ github.sha }}'
+          image-ref: "naasirosman/test-repo:${{ github.sha }}"
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
