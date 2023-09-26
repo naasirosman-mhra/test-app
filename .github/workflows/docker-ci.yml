@@ -26,7 +26,6 @@ jobs:
       - name: Tag Docker image with git commit sha
         run: docker tag test-image "${{ secrets.DOCKER_HUB_USERNAME }}/azure:${{ github.sha }}"
 
-
       - name: Push Docker image
         run: |
           docker push "${{ secrets.DOCKER_HUB_USERNAME }}/azure:latest"
@@ -37,13 +36,23 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-
       - name: Docker Image Update on Azure
         run: |
           az webapp config container set --resource-group docker-task-rg --name docke-web-app3 --docker-custom-image-name ${{ secrets.DOCKER_HUB_USERNAME }}/azure:${{ github.sha }}
 
   security-scan:
-   needs: [build-and-deploy]
-   uses: ./.github/workflows/security-scan.yml
-   secrets: 
-    DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+    needs: [build-and-deploy]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Run Security Scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: "${{ secrets.DOCKER_HUB_USERNAME }}/azure:${{ github.sha }}"
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
