@@ -1,4 +1,4 @@
-name: Docker CI/CD
+name: Docker Build Deploy & Test
 
 on:
   push:
