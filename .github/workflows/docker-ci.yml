@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - feature/**
 
 jobs:
   build-and-deploy:
@@ -21,10 +20,11 @@ jobs:
       - name: Log in to Docker Hub
         run: docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_PASSWORD }}
 
-      - name: Tag Docker image as latest and git commit sha
-        run: |
-         docker tag azure-test-image "${{ secrets.DOCKER_HUB_USERNAME }}/azure:latest"
-         docker tag azure-test-image "${{ secrets.DOCKER_HUB_USERNAME }}/azure:${{ github.sha }}"
+      - name: Tag Docker image as latest
+        run: docker tag azure-test-image "${{ secrets.DOCKER_HUB_USERNAME }}/azure:latest"
+
+      - name: Tag Docker image with git commit sha
+        run: docker tag azure-test-image "${{ secrets.DOCKER_HUB_USERNAME }}/azure:${{ github.sha }}"
 
 
       - name: Push Docker image
