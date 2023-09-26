@@ -21,15 +21,15 @@ jobs:
         run: docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_PASSWORD }}
 
       - name: Tag Docker image as latest
-        run: docker tag test-image "${{ secrets.DOCKER_HUB_USERNAME }}/azure:latest"
+        run: docker tag test-image "naasirosman/test-repo:latest"
 
       - name: Tag Docker image with git commit sha
-        run: docker tag test-image "${{ secrets.DOCKER_HUB_USERNAME }}/azure:${{ github.sha }}"
+        run: docker tag test-image "naasirosman/test-repo:${{ github.sha }}"
 
       - name: Push Docker image
         run: |
-          docker push "${{ secrets.DOCKER_HUB_USERNAME }}/azure:latest"
-          docker push "${{ secrets.DOCKER_HUB_USERNAME }}/azure:${{ github.sha }}"
+          docker push "naasirosman/test-repo:latest"
+          docker push "naasirosman/test-repo:${{ github.sha }}"
 
       - name: Log in to Azure
         uses: azure/login@v1
@@ -50,7 +50,7 @@ jobs:
       - name: Run Security Scan
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: "${{ secrets.DOCKER_HUB_USERNAME }}/azure:${{ github.sha }}"
+          image-ref: "naasirosman/test-repo:${{ github.sha }}"
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
